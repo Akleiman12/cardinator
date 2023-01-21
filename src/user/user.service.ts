@@ -6,6 +6,7 @@ import { UserRegisterDTO } from './models/user-register.dto';
 import { User } from './models/user.model';
 import { sign } from 'jsonwebtoken';
 import { JwtService } from '@nestjs/jwt/dist/jwt.service';
+import { dataKeeperConfig } from 'config/data-keeper.config';
 
 @Injectable()
 export class UserService {
@@ -22,7 +23,7 @@ export class UserService {
         // Interval set to backup data locally every 5 mins (300000ms)
         setInterval(() => {
             this.dataKeeper.setData(DataTypesEnum.User, this.usersList);
-        }, 300000);
+        }, dataKeeperConfig.saveInterval);
     }
 
     private sanitizeUser(user: User) {
