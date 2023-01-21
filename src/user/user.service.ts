@@ -5,13 +5,14 @@ import { UserLoginDTO } from './models/user-login.dto';
 import { UserRegisterDTO } from './models/user-register.dto';
 import { User } from './models/user.model';
 import { sign } from 'jsonwebtoken';
+import { JwtService } from '@nestjs/jwt/dist/jwt.service';
 
 @Injectable()
 export class UserService {
 
     usersList: User[] = [];
 
-    constructor(private readonly dataKeeper: DataKeeperService) {
+    constructor(private readonly dataKeeper: DataKeeperService, private readonly jwtService: JwtService) {
         this.init();
     }
 
@@ -83,11 +84,11 @@ export class UserService {
             throw new BadRequestException('Wrong credentials')
         }
 
-        // Auth JWT to expire in two days
-        const jwt = sign({
+        // Generate auth JWT
+        const jwt = this.jwtService.sign({
+            id: user.id,
             username: user.username,
-        }, 'SECRET!', {
-            expiresIn: '2d'
+            wallet: user.wallet
         })
 
         return jwt;

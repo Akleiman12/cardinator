@@ -8,7 +8,6 @@ export class UserRegisterDTO {
 
     @IsString()
     @IsHexadecimal()
-    @IsNotEmpty()
     @Length(42,42) // 2 for '0x' and 40 for the actual hexadecimal number
     wallet: string;
 
