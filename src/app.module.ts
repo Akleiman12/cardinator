@@ -10,11 +10,6 @@ import { LoggerInterceptor } from './interceptors/logger.interceptor';
 @Module({
   imports: [UserModule, CardModule, OfferModule, DataKeeperModule],
   controllers: [AppController],
-  providers: [
-    {
-      provide: APP_INTERCEPTOR,
-      useClass: LoggerInterceptor,
-    },
-  ],
+  providers: [],
 })
 export class AppModule {}

@@ -12,6 +12,7 @@ export class LoggerInterceptor implements NestInterceptor {
       map(
         (response) => {
           console.log('RESPONSE => ', { timestamp: new Date(), response })
+          return response;
         }
       )
     );
