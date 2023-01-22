@@ -102,4 +102,9 @@ export class UserService {
 
         return user.balance;
     }
+
+    clearData() {
+        this.usersList = [];
+        this.dataKeeper.setData(DataTypesEnum.User, this.usersList);
+    }
 }

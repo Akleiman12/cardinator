@@ -1,7 +1,7 @@
 import { v4 } from 'uuid';
 import { OfferCreateDTO } from "./offer-create.dto";
 
-export enum OfferStatus {
+export enum OfferStatusEnum {
     'Pending',
     'Accepted',
     'Rejected'
@@ -13,7 +13,7 @@ export class Offer {
     toUser: string; // Links to user receiving the offer
     card: string; // Links to card being requested
     ammount: number;
-    status: OfferStatus;
+    status: OfferStatusEnum;
     createdAt: Date;
 
     constructor(props: Offer) {
@@ -33,7 +33,7 @@ export class Offer {
             toUser,
             card: props.card,
             ammount: props.ammount,
-            status: OfferStatus.Pending,
+            status: OfferStatusEnum.Pending,
             createdAt: new Date()
         })
     }

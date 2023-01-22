@@ -5,7 +5,7 @@ import { DataKeeperService, DataTypesEnum } from 'src/data-keeper/data-keeper.se
 import { RequestUser } from 'src/decorators/models/request-user.model';
 import { UserService } from 'src/user/user.service';
 import { OfferCreateDTO } from './models/offer-create.dto';
-import { Offer, OfferStatus } from './models/offer.model';
+import { Offer, OfferStatusEnum } from './models/offer.model';
 
 @Injectable()
 export class OfferService {
@@ -70,14 +70,14 @@ export class OfferService {
         const cardToExchange = this.cardService.getById(offerToAccept.card);
         cardToExchange.owner = offerToAccept.fromUser;
 
-        offerToAccept.status = OfferStatus.Accepted;
+        offerToAccept.status = OfferStatusEnum.Accepted;
 
         return offerToAccept;
     }
 
     reject(user: RequestUser, offerId: string) {
         const offerToReject = this.validateOfferChange(user.id, offerId);
-        offerToReject.status = OfferStatus.Rejected;
+        offerToReject.status = OfferStatusEnum.Rejected;
         return offerToReject;
     }
     
@@ -89,9 +89,13 @@ export class OfferService {
         if (offerToChange.toUser !== toUser) throw new BadRequestException('RequestUser is not related to Offer.');
         
         // Check if status is 'Pending'
-        if (offerToChange.status !== OfferStatus.Pending) throw new BadRequestException('Offer status is not \'Pending\'.');
+        if (offerToChange.status !== OfferStatusEnum.Pending) throw new BadRequestException('Offer status is not \'Pending\'.');
 
         return offerToChange;
     }
 
+    clearData() {
+        this.offerList = [];
+        this.dataKeeper.setData(DataTypesEnum.Offer, this.offerList);
+    }
 }

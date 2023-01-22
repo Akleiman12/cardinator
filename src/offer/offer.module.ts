@@ -8,6 +8,7 @@ import { OfferService } from './offer.service';
 @Module({
   imports: [UserModule, DataKeeperModule, CardModule],
   controllers: [OfferController],
-  providers: [OfferService]
+  providers: [OfferService],
+  exports: [OfferService]
 })
 export class OfferModule {}

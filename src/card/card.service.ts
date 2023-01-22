@@ -49,4 +49,9 @@ export class CardService {
 
         return newCard;
     }
+
+    clearData() {
+        this.cardsList = [];
+        this.dataKeeper.setData(DataTypesEnum.Card, this.cardsList);
+    }
 }
