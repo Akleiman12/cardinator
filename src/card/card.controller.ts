@@ -16,14 +16,12 @@ export class CardController {
 
     @Get(':id')
     getById(@Param('id') id: string) {
-        const card = this.cardService.getById(id);
-        if (!card) throw new NotFoundException('Card not found');
-        return
+        return this.cardService.getById(id);
     }
 
-    @Get('user/:id')
-    getManyByOwner(@Param('id') id: string) {
-        return this.cardService.getManyByOwner(id);
+    @Get('user/:user_id')
+    getManyByOwner(@Param('user_id') userId: string) {
+        return this.cardService.getManyByOwner(userId);
     }
 
     @Post('create')

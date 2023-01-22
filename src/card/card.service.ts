@@ -23,7 +23,9 @@ export class CardService {
     }
 
     getById(id: string) {
-        return this.cardsList.find((card) => card.id === id);
+        const card = this.cardsList.find((card) => card.id === id);
+        if (!card) throw new NotFoundException('Card not found.');
+        return card;
     }
 
     getManyByOwner(ownerId: string) {
@@ -31,9 +33,8 @@ export class CardService {
     }
 
     claimUnownedCard(userId: string, cardId: string) {
-        // Check if card exists and has no owner
+        // Get card and check it has no owner
         const cardToBuy = this.getById(cardId);
-        if (!cardToBuy) throw new NotFoundException('Card not found.');
         if (cardToBuy.owner) throw new BadRequestException('Card is already owned.');
 
         // Set user as owner and return success
