@@ -68,7 +68,7 @@ export class UserService {
         };
 
         // Validate unique wallet
-        if(this.getByWallet(userData.username)) {
+        if(this.getByWallet(userData.wallet)) {
             throw new BadRequestException('Wallet already in use.');
         };
 
