@@ -1,4 +1,4 @@
-import { IsString, IsAlphanumeric, IsHexadecimal, IsNotEmpty, Length } from "class-validator";
+import { IsString, IsAlphanumeric, IsHexadecimal, Length, IsInt, Min, IsOptional } from "class-validator";
 
 export class UserRegisterDTO {
     @IsString()
@@ -15,4 +15,9 @@ export class UserRegisterDTO {
     @IsAlphanumeric()
     @Length(8,12)
     password: string;
+
+    @IsInt()
+    @Min(0)
+    @IsOptional()
+    balance: number;
 }

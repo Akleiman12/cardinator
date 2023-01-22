@@ -1,4 +1,6 @@
 import { Body, Controller, Get, NotFoundException, Param, Post } from '@nestjs/common';
+import { RequestUser } from 'src/decorators/models/request-user.model';
+import { User } from 'src/decorators/user.decorator';
 import { OfferCreateDTO } from './models/offer-create.dto';
 import { OfferService } from './offer.service';
 
@@ -30,5 +32,15 @@ export class OfferController {
     @Post('create')
     create(@Body() offerCreateDTO: OfferCreateDTO) {
         return this.offerService.create(offerCreateDTO);
+    }
+
+    @Post('accept/:id')
+    postAccept(@User() user: RequestUser, @Param('id') id: string) {
+        return this.offerService.accept(user, id);
+    }
+
+    @Post('reject/:id')
+    postReject(@User() user: RequestUser, @Param('id') id: string) {
+        return this.offerService.reject(user, id);
     }
 }

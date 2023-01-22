@@ -5,6 +5,7 @@ export class User {
     id: string;
     username: string;
     wallet: string;
+    balance: number;
     password: string;
     createdAt: Date | string;
 
@@ -21,6 +22,7 @@ export class User {
             id: v4(),
             username: props.username,
             wallet: props.wallet,
+            balance: props.balance ? props.balance : 0,
             password: props.password,
             createdAt: new Date()
         });
