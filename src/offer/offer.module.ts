@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
-import { CardModule } from 'src/card/card.module';
-import { DataKeeperModule } from 'src/data-keeper/data-keeper.module';
-import { UserModule } from 'src/user/user.module';
+import { CardModule } from '../card/card.module';
+import { DataKeeperModule } from '../data-keeper/data-keeper.module';
+import { UserModule } from '../user/user.module';
 import { OfferController } from './offer.controller';
 import { OfferService } from './offer.service';
 

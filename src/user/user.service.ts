@@ -1,12 +1,11 @@
-import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, OnApplicationShutdown } from '@nestjs/common';
 import { DataKeeperService } from '../data-keeper/data-keeper.service';
 import { DataTypesEnum } from '../data-keeper/data-keeper.service';
 import { UserLoginDTO } from './models/user-login.dto';
 import { UserRegisterDTO } from './models/user-register.dto';
 import { User } from './models/user.model';
-import { sign } from 'jsonwebtoken';
 import { JwtService } from '@nestjs/jwt/dist/jwt.service';
-import { dataKeeperConfig } from 'config/data-keeper.config';
+import { dataKeeperConfig } from '../../config/data-keeper.config';
 
 @Injectable()
 export class UserService {

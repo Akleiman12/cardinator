@@ -1,9 +1,9 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { dataKeeperConfig } from 'config/data-keeper.config';
-import { CardService } from 'src/card/card.service';
-import { DataKeeperService, DataTypesEnum } from 'src/data-keeper/data-keeper.service';
-import { RequestUser } from 'src/decorators/models/request-user.model';
-import { UserService } from 'src/user/user.service';
+import { CardService } from '../card/card.service';
+import { DataKeeperService, DataTypesEnum } from '../data-keeper/data-keeper.service';
+import { RequestUser } from '../decorators/models/request-user.model';
+import { UserService } from '../user/user.service';
 import { OfferCreateDTO } from './models/offer-create.dto';
 import { Offer, OfferStatusEnum } from './models/offer.model';
 

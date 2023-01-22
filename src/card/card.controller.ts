@@ -1,6 +1,6 @@
 import { Body, Controller, Get, NotFoundException, Param, Post, UseGuards } from '@nestjs/common';
-import { RequestUser } from 'src/decorators/models/request-user.model';
-import { JwtAuthGuard } from 'src/user/guards/jwt.guard';
+import { RequestUser } from '../decorators/models/request-user.model';
+import { JwtAuthGuard } from '../user/guards/jwt.guard';
 import { User } from '../decorators/user.decorator';
 import { CardService } from './card.service';
 import { CardCreateDTO } from './models/card-create.dto';

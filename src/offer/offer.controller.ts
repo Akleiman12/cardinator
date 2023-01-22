@@ -1,8 +1,8 @@
 import { Body, Controller, Get, NotFoundException, Param, Post } from '@nestjs/common';
 import { UseGuards } from '@nestjs/common/decorators';
-import { RequestUser } from 'src/decorators/models/request-user.model';
-import { User } from 'src/decorators/user.decorator';
-import { JwtAuthGuard } from 'src/user/guards/jwt.guard';
+import { RequestUser } from '../decorators/models/request-user.model';
+import { User } from '../decorators/user.decorator';
+import { JwtAuthGuard } from '../user/guards/jwt.guard';
 import { OfferCreateDTO } from './models/offer-create.dto';
 import { OfferService } from './offer.service';
 
