@@ -13,6 +13,7 @@ export class User {
         this.id = props.id;
         this.username = props.username;
         this.wallet = props.wallet;
+        this.balance = props.balance;
         this.password = props.password;
         this.createdAt = props.createdAt;
     }

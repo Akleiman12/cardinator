@@ -1,6 +1,8 @@
 import { Body, Controller, Get, NotFoundException, Param, Post } from '@nestjs/common';
+import { UseGuards } from '@nestjs/common/decorators';
 import { RequestUser } from 'src/decorators/models/request-user.model';
 import { User } from 'src/decorators/user.decorator';
+import { JwtAuthGuard } from 'src/user/guards/jwt.guard';
 import { OfferCreateDTO } from './models/offer-create.dto';
 import { OfferService } from './offer.service';
 
@@ -19,26 +21,30 @@ export class OfferController {
         return this.offerService.getById(id);
     }
 
-    @Get('user/:to_user')
+
+    @Get('to_user/:to_user')
     getByToUser(@Param('to_user') toUser: string) {
         return this.offerService.getManyByToUser(toUser);
     }
 
-    @Get('user/:from_user')
+    @Get('from_user/:from_user')
     getByFromUser(@Param('from_user') fromUser: string) {
         return this.offerService.getManyByFromUser(fromUser);
     }
 
+    @UseGuards(JwtAuthGuard)
     @Post('create')
-    create(@Body() offerCreateDTO: OfferCreateDTO) {
-        return this.offerService.create(offerCreateDTO);
+    create(@User() user: RequestUser, @Body() offerCreateDTO: OfferCreateDTO) {
+        return this.offerService.create(user, offerCreateDTO);
     }
 
+    @UseGuards(JwtAuthGuard)
     @Post('accept/:id')
     postAccept(@User() user: RequestUser, @Param('id') id: string) {
         return this.offerService.accept(user, id);
     }
 
+    @UseGuards(JwtAuthGuard)
     @Post('reject/:id')
     postReject(@User() user: RequestUser, @Param('id') id: string) {
         return this.offerService.reject(user, id);

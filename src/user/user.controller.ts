@@ -9,6 +9,11 @@ export class UserController {
 
     constructor(private readonly userService: UserService) {}
 
+    @Get()
+    getAll() {
+      return this.userService.usersList;
+    }
+
     @Get(':id')
     getById(@Param('id') id: string): Partial<User> {
         const user = this.userService.getById(id);

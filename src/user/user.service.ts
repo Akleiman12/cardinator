@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { DataKeeperService } from '../data-keeper/data-keeper.service';
 import { DataTypesEnum } from '../data-keeper/data-keeper.service';
 import { UserLoginDTO } from './models/user-login.dto';
@@ -93,5 +93,13 @@ export class UserService {
         })
 
         return jwt;
+    }
+
+    updateBalance(id: string, ammount: number) {
+        const user: User = this.usersList.find((user: User) => user.id === id);
+
+        user.balance += ammount;
+
+        return user.balance;
     }
 }

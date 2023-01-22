@@ -26,10 +26,10 @@ export class Offer {
         this.createdAt = props.createdAt;
     }
 
-    static create(props: OfferCreateDTO, toUser: string) {
+    static create(props: OfferCreateDTO, fromUser: string, toUser: string) {
         return new Offer({
             id: v4(),
-            fromUser: props.from_user,
+            fromUser,
             toUser,
             card: props.card,
             ammount: props.ammount,

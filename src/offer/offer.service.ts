@@ -42,15 +42,18 @@ export class OfferService {
         return this.offerList.filter((offer) => offer.fromUser === fromUser);
     }
 
-    create(offerCreateDTO: OfferCreateDTO) {
-        // Check if card exists and if it already has an owner
+    create(user: RequestUser, offerCreateDTO: OfferCreateDTO) {
+        // Check if card exists and if it already has an owner and the RequestUser is not the owner
         const offerCard = this.cardService.getById(offerCreateDTO.card);
         if (!offerCard.owner) throw new BadRequestException('Card is not owned, claim it instead.');
+        if (user.id === offerCard.owner) throw new BadRequestException('You already are the owner of this card.')
 
-        // TODO: Check fromUser balance and throw Error if not enough
+        // Check fromUser balance and throw Error if not enough
+        const fromUser = this.userService.getById(user.id);
+        if(fromUser.balance < offerCreateDTO.ammount) throw new BadRequestException('User balance is not enough for Offer.');
 
         // Create Offer and save it
-        const offer = Offer.create(offerCreateDTO, offerCard.owner);
+        const offer = Offer.create(offerCreateDTO, user.id, offerCard.owner);
         this.offerList.push(offer);
 
         return offer;
@@ -59,15 +62,13 @@ export class OfferService {
     accept(user: RequestUser, offerId: string) {
         const offerToAccept = this.validateOfferChange(user.id, offerId);
 
-        // TODO: Change users balance
-        const toUser = this.userService.getById(offerToAccept.toUser);
-        toUser.balance += offerToAccept.ammount;
-        const fromUser = this.userService.getById(offerToAccept.fromUser);
-        fromUser.balance -= offerToAccept.ammount;
+        // Change users balance
+        this.userService.updateBalance(offerToAccept.toUser, offerToAccept.ammount);
+        this.userService.updateBalance(offerToAccept.fromUser, -offerToAccept.ammount);
 
         // Change 'owner' of Card
         const cardToExchange = this.cardService.getById(offerToAccept.card);
-        cardToExchange.owner = fromUser.id;
+        cardToExchange.owner = offerToAccept.fromUser;
 
         offerToAccept.status = OfferStatus.Accepted;
 
