@@ -1,4 +1,5 @@
 import { Body, Controller, Get, NotFoundException, Param, Post, UseGuards } from '@nestjs/common';
+import { RequestUser } from 'src/decorators/models/request-user.model';
 import { JwtAuthGuard } from 'src/user/guards/jwt.guard';
 import { User } from '../decorators/user.decorator';
 import { CardService } from './card.service';
@@ -31,7 +32,7 @@ export class CardController {
 
     @UseGuards(JwtAuthGuard)
     @Post('claim-unowned/:id')
-    getClaimUnowned(@User() user, @Param('id') cardId: string) {
+    getClaimUnowned(@User() user: RequestUser, @Param('id') cardId: string) {
         return this.cardService.claimUnownedCard(user.id, cardId)
     }
 }
