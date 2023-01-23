@@ -16,7 +16,7 @@ export class DataKeeperService {
      */
     async setData(type: string, data: unknown) {
         const dataString = JSON.stringify(data);
-        console.log(`Setting ${type} => ${dataString}`);
+        console.log(`Setting local data for: ${type} => ${dataString}`);
         fs.writeFile(`./data/${type}`, dataString, (err) => {
             if (err) {
                 console.log(err);
@@ -31,7 +31,9 @@ export class DataKeeperService {
     getData(type: string) {
         try {
             const dataBuffer = fs.readFileSync(`./data/${type}`);
-            return JSON.parse(dataBuffer.toString());
+            const data = dataBuffer.toString();
+            console.log(`Getting local data for: ${type} => ${data}`);
+            return JSON.parse(data);
         } catch (err) {
             console.log(err);
             throw new InternalServerErrorException(`Error getting: ${type}`);
