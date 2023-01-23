@@ -33,6 +33,12 @@ export class OfferController {
     }
 
     @UseGuards(JwtAuthGuard)
+    @Post('claim-unowned/:id')
+    getClaimUnowned(@User() user: RequestUser, @Param('id') cardId: string) {
+        return this.offerService.buyUnownedCard(user.id, cardId)
+    }
+
+    @UseGuards(JwtAuthGuard)
     @Post('create')
     create(@User() user: RequestUser, @Body() offerCreateDTO: OfferCreateDTO) {
         return this.offerService.create(user, offerCreateDTO);

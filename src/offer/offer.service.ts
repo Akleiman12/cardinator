@@ -42,6 +42,23 @@ export class OfferService {
         return this.offerList.filter((offer) => offer.fromUser === fromUser);
     }
 
+    buyUnownedCard(userId: string, cardId: string) {
+        // Get User object
+        const user = this.userService.getById(userId);
+        // Get card and check it has no owner
+        const cardToBuy = this.cardService.getById(cardId);
+        if (cardToBuy.owner) throw new BadRequestException('Card is already owned.');
+
+        // Check user has enough 'balance' to pay 'price' of card
+        if (cardToBuy.price >= user.balance) throw new BadRequestException('User\'s balance is not enough to acquire Card.');
+
+        // Set user as owner and return success
+        cardToBuy.owner = user.id;
+        user.balance -= cardToBuy.price;
+
+        return cardToBuy;
+    }
+
     create(user: RequestUser, offerCreateDTO: OfferCreateDTO) {
         // Check if card exists and if it already has an owner and the RequestUser is not the owner
         const offerCard = this.cardService.getById(offerCreateDTO.card);
@@ -50,7 +67,7 @@ export class OfferService {
 
         // Check fromUser balance and throw Error if not enough
         const fromUser = this.userService.getById(user.id);
-        if(fromUser.balance < offerCreateDTO.ammount) throw new BadRequestException('User balance is not enough for Offer.');
+        if(fromUser.balance <= offerCreateDTO.ammount) throw new BadRequestException('User balance is not enough for Offer.');
 
         // Create Offer and save it
         const offer = Offer.create(offerCreateDTO, user.id, offerCard.owner);

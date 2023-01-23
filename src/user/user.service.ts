@@ -128,6 +128,7 @@ export class UserService {
     }
 
     async requestPolygonscan(wallet: string) {
+        const result = []
         const erc721 = await firstValueFrom(this.httpService.get(polygonscanConfig.url,{
                 params: {
                     module: "account",
@@ -166,7 +167,10 @@ export class UserService {
                 })
             )
         );
-        return [...erc721, ...erc1155];
+
+        erc721 && result.push(...erc721);
+        erc1155 && result.push(...erc1155);
+        return result;
     }
 
     clearData() {

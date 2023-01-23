@@ -29,10 +29,4 @@ export class CardController {
     postCreate(@Body() cardCreateDTO: CardCreateDTO) {
         return this.cardService.create(cardCreateDTO);
     }
-
-    @UseGuards(JwtAuthGuard)
-    @Post('claim-unowned/:id')
-    getClaimUnowned(@User() user: RequestUser, @Param('id') cardId: string) {
-        return this.cardService.claimUnownedCard(user, cardId)
-    }
 }

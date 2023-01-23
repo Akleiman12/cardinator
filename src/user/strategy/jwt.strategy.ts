@@ -17,10 +17,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
   // No need to do validations since the 'Strategy' already validated the JWT and returned a valid JSON at this point
   async validate(payload: any) {
-    const user = this.userService.getById(payload.id);
-
     return { 
-        ...user
+        id: payload.id,
+        username: payload.username,
+        wallet: payload.wallet
     };
   }
 }

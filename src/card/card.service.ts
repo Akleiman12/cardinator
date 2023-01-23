@@ -33,20 +33,6 @@ export class CardService {
         return this.cardsList.filter((card) => card.owner === ownerId);
     }
 
-    claimUnownedCard(user: RequestUser, cardId: string) {
-        // Get card and check it has no owner
-        const cardToBuy = this.getById(cardId);
-        if (cardToBuy.owner) throw new BadRequestException('Card is already owned.');
-
-        // Check user has enough 'balance' to pay 'price' of card
-        if (cardToBuy.price > user.balance) throw new BadRequestException('User\'s balance is not enough to acquire Card.');
-
-        // Set user as owner and return success
-        cardToBuy.owner = user.id;
-
-        return cardToBuy;
-    }
-
     create(cardCreateDTO: CardCreateDTO) {
         const newCard = Card.create(cardCreateDTO);
         this.cardsList.push(newCard);
