@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, InternalServerErrorException, OnApplicationShutdown } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom, catchError, map } from 'rxjs'
@@ -48,8 +48,8 @@ export class UserService {
     getById(id: string): Partial<User> | undefined {
         const user: User = this.usersList.find((user: User) => user.id === id);
 
-        // Return if undefined
-        if (!user) return;
+        // Throw error if not found
+        if (!user) throw new NotFoundException('User not found');
 
         return this.sanitizeUser(user);
     }

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, NotFoundException, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { UserLoginDTO } from './models/user-login.dto';
 import { UserRegisterDTO } from './models/user-register.dto';
 import { User } from './models/user.model';
@@ -16,9 +16,7 @@ export class UserController {
 
     @Get(':id')
     getById(@Param('id') id: string): Partial<User> {
-        const user = this.userService.getById(id);
-        if (!user) throw new NotFoundException('User not found');
-        return user;
+        return this.userService.getById(id);
     }
 
     @Post('register')
