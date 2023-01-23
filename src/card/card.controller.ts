@@ -33,6 +33,6 @@ export class CardController {
     @UseGuards(JwtAuthGuard)
     @Post('claim-unowned/:id')
     getClaimUnowned(@User() user: RequestUser, @Param('id') cardId: string) {
-        return this.cardService.claimUnownedCard(user.id, cardId)
+        return this.cardService.claimUnownedCard(user, cardId)
     }
 }
