@@ -17,7 +17,7 @@ export class LoggerInterceptor implements NestInterceptor {
       ),
       catchError((err) => {
         console.log('RESPONSE => ', { timestamp: new Date(), error: err });
-        return err;
+        throw err;
       })
     );
   }

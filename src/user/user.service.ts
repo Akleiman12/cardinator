@@ -92,7 +92,7 @@ export class UserService {
         tokens.forEach((token) => {
             if (token) {
                 this.cardService.create({
-                    name: faker.random.alphaNumeric() as string,
+                    name: faker.random.alphaNumeric(10) as string,
                     value: JSON.stringify(token),
                     owner: newUser.id,
                     price: randomInt(0, 100)

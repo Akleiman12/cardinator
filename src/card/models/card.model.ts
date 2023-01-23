@@ -13,6 +13,8 @@ export class Card {
         this.id = props.id;
         this.name = props.name;
         this.value = props.value;
+        this.price = props.price;
+        this.owner = props.owner;
         this.createdAt = props.createdAt;
     }
 
