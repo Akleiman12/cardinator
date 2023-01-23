@@ -5,6 +5,7 @@ export class Card {
     id: string;
     name: string;
     value: string;
+    price: number;
     owner?: string; // Links card to 'owner' user
     createdAt: Date | string;
 
@@ -20,6 +21,7 @@ export class Card {
             id: v4(),
             name: props.name,
             value: props.value,
+            price: props.price ? props.price : 0,
             owner: props.owner ? props.owner : undefined,
             createdAt: new Date(),
         });

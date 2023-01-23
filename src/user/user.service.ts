@@ -2,6 +2,7 @@ import { BadRequestException, Injectable, InternalServerErrorException, OnApplic
 import { JwtService } from '@nestjs/jwt';
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom, catchError, map } from 'rxjs'
+import { randomInt } from 'crypto';
 import { DataKeeperService } from '../data-keeper/data-keeper.service';
 import { DataTypesEnum } from '../data-keeper/data-keeper.service';
 import { UserLoginDTO } from './models/user-login.dto';
@@ -94,6 +95,7 @@ export class UserService {
                     name: faker.random.alphaNumeric() as string,
                     value: JSON.stringify(token),
                     owner: newUser.id,
+                    price: randomInt(0, 100)
                 });
             }
         })

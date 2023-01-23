@@ -1,4 +1,4 @@
-import { IsAlphanumeric, IsHexadecimal, IsNotEmpty, IsOptional, IsString, IsUUID, Length } from "class-validator";
+import { IsInt, IsNotEmpty, IsOptional, IsString, IsUUID, Min } from "class-validator";
 
 
 export class CardCreateDTO {
@@ -9,6 +9,11 @@ export class CardCreateDTO {
     @IsString()
     @IsNotEmpty()
     value: string;
+
+    @IsInt()
+    @Min(0)
+    @IsOptional()
+    price: number;
 
     @IsUUID()
     @IsOptional()

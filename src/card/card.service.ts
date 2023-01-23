@@ -1,4 +1,5 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { RequestUser } from '../decorators/models/request-user.model';
 import { dataKeeperConfig } from '../../config/data-keeper.config';
 import { DataKeeperService, DataTypesEnum } from '../data-keeper/data-keeper.service';
 import { CardCreateDTO } from './models/card-create.dto';
@@ -32,13 +33,16 @@ export class CardService {
         return this.cardsList.filter((card) => card.owner === ownerId);
     }
 
-    claimUnownedCard(userId: string, cardId: string) {
+    claimUnownedCard(user: RequestUser, cardId: string) {
         // Get card and check it has no owner
         const cardToBuy = this.getById(cardId);
         if (cardToBuy.owner) throw new BadRequestException('Card is already owned.');
 
+        // Check user has enough 'balance' to pay 'price' of card
+        if (cardToBuy.price > user.balance) throw new BadRequestException('User\'s balance is not enough to acquire Card.');
+
         // Set user as owner and return success
-        cardToBuy.owner = userId;
+        cardToBuy.owner = user.id;
 
         return cardToBuy;
     }
