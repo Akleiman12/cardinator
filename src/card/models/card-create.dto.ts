@@ -12,5 +12,5 @@ export class CardCreateDTO {
 
     @IsUUID()
     @IsOptional()
-    owner: string;
+    owner?: string;
 }

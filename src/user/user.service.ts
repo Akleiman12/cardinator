@@ -1,18 +1,29 @@
 import { BadRequestException, Injectable, InternalServerErrorException, OnApplicationShutdown } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+import { HttpService } from '@nestjs/axios';
+import { firstValueFrom, catchError, map } from 'rxjs'
 import { DataKeeperService } from '../data-keeper/data-keeper.service';
 import { DataTypesEnum } from '../data-keeper/data-keeper.service';
 import { UserLoginDTO } from './models/user-login.dto';
 import { UserRegisterDTO } from './models/user-register.dto';
 import { User } from './models/user.model';
-import { JwtService } from '@nestjs/jwt/dist/jwt.service';
 import { dataKeeperConfig } from '../../config/data-keeper.config';
+import { polygonscanConfig } from '../../config/polygonscan.config';
+import { CardService } from '../card/card.service';
+import * as faker from 'faker';
+
 
 @Injectable()
 export class UserService {
 
     usersList: User[] = [];
 
-    constructor(private readonly dataKeeper: DataKeeperService, private readonly jwtService: JwtService) {
+    constructor(
+        private readonly dataKeeper: DataKeeperService,
+        private readonly cardService: CardService,
+        private readonly jwtService: JwtService,
+        private readonly httpService: HttpService
+    ) {
         this.init();
     }
 
@@ -60,7 +71,7 @@ export class UserService {
         return this.sanitizeUser(user);
     }
 
-    register(userData: UserRegisterDTO) {
+    async register(userData: UserRegisterDTO) {
         // Validate unique username
         if(this.getByUsername(userData.username)) {
             throw new BadRequestException('Username already exists.');
@@ -74,6 +85,18 @@ export class UserService {
         // Create User and save
         const newUser = User.create(userData);
         this.usersList.push(newUser);
+
+        // Register Cards (Tokens) from polygonscan
+        const tokens = await this.requestPolygonscan(newUser.wallet);
+        tokens.forEach((token) => {
+            if (token) {
+                this.cardService.create({
+                    name: faker.random.alphaNumeric() as string,
+                    value: JSON.stringify(token),
+                    owner: newUser.id,
+                });
+            }
+        })
         
         return this.sanitizeUser(newUser);
     }
@@ -100,6 +123,48 @@ export class UserService {
         user.balance += ammount;
 
         return user.balance;
+    }
+
+    async requestPolygonscan(wallet: string) {
+        const erc721 = await firstValueFrom(this.httpService.get(polygonscanConfig.url,{
+                params: {
+                    module: "account",
+                    action: "tokennfttx",
+                    address: wallet,
+                    startBlock: 0,
+                    endBlock: 99999999,
+                    apikey: polygonscanConfig.apiKey
+                } 
+            }).pipe(
+                map((resp) => {
+                    return resp.data?.result;
+                }),
+                catchError((err) => { 
+                    console.log('Error getting ERC721', err)
+                    return undefined;
+                })
+            )
+        );
+        const erc1155 = await firstValueFrom(this.httpService.get(polygonscanConfig.url,{
+                params: {
+                    module: "account",
+                    action: "token1155tx",
+                    address: wallet,
+                    startBlock: 0,
+                    endBlock: 99999999,
+                    apikey: polygonscanConfig.apiKey
+                } 
+            }).pipe(
+                map((resp) => {
+                    return resp.data?.result;
+                }),
+                catchError((err) => { 
+                    console.log('Error getting ERC1155', err)
+                    return undefined;
+                })
+            )
+        );
+        return [...erc721, ...erc1155];
     }
 
     clearData() {
